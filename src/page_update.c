@@ -26,7 +26,7 @@ extern volatile int die;
 extern pthread_mutex_t poll_mutex;
 extern GtkBuilder	*builder;
 
-
+#if 0
 float TempVal (bool units,uint16_t temp)
 {
 	return ((((9.0*((float)temp))/50.0)+32.0)*(units == FAHRENHEITUNITS))+((((float)temp)/10.0)*(units == CELSIUSUNITS));
@@ -40,6 +40,44 @@ float HystVal (bool units,uint16_t temp)
 	}
 	return ((float)temp)/10.0;
 }
+#endif
+
+float TempVal (bool units,uint16_t temp)
+{
+	float sign = 1.0;
+	uint16_t tt = 0x8000 & temp;
+	sign = (0 != tt) ? -1.0 : 1.0;
+#if defined(_DEBUG)
+	int il = sizeof(float);
+	fprintf(stderr,"\nTempVal() units = %d  temp = %d  sign = %f\n",units,temp,sign);
+#endif
+	float rtemp = 0.0;
+	tt = (sign < 0.0) ? ~temp : temp;
+	float ftemp = (sign < 0.0) ? tt+1 : tt;
+	ftemp *= sign;
+	if (units == FAHRENHEITUNITS)
+	{
+		rtemp =  (9.0*(ftemp/50.0))+32.0;
+	}
+	if (units == CELSIUSUNITS)
+	{
+		rtemp = ftemp/10.0;
+	}
+#if defined(_DEBUG)
+	fprintf(stderr,"\nTempVal() units = %d  temp = %d  sign = %f  rtemp = %f\n",units,temp,sign,rtemp);
+#endif
+	return (float)rtemp;
+}
+
+float HystVal (bool units,uint16_t temp)
+{
+	if ( units == FAHRENHEITUNITS )
+	{
+		return (9.0*((float)temp))/50.0;
+	}
+	return ((float)temp)/10.0;
+}
+
 
 gchar *get_multivalue_string(SOLAMULTIVALUE_T * mv_list,uint16_t ui16_size,uint16_t ui16_ix)
 {
@@ -117,14 +155,15 @@ void page_update(SCREENPAGE_T * page)
 		case Temperature:
 			temperature_units = (bool)Sola_Data[Temperature_units.us_RegAddr];
 			temperature_value = TempVal(temperature_units,ui16_value);
+#if defined (_DEBUG)
+			fprintf(stderr,"\n temperature_value = %f \n",temperature_value);
+#endif
 			p_v = memset(wname,(int)0,sizeof(wname));
 			i_r = g_sprintf(wname,"txt%04X",ui16_reg_addr);
 			p_v = memset(wvalue,(int)0,sizeof(wvalue));
-			i_r = (temperature_units == (bool)FAHRENHEITUNITS) ? \
-					g_sprintf(wvalue,"%-.2f",temperature_value) : \
-							g_sprintf(wvalue,"%-.2f",temperature_value);
+			i_r = g_sprintf(wvalue,"%f",temperature_value);
 #if defined (_DEBUG)
-			fprintf(stderr,"\ni_x = %d  0x%04X  %s  %s\n",i_x,ui16_reg_addr,wname,wvalue);
+			fprintf(stderr,"\ni_x = %d  0x%04X  %d  %s  %s\n", i_x, ui16_reg_addr, ui16_value, wname, wvalue);
 #endif
 			widget_target = GTK_WIDGET(gtk_builder_get_object(builder, wname));
 			g_assert(NULL != widget_target);

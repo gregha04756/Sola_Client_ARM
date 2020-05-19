@@ -12,10 +12,16 @@ gboolean window_is_showing(GtkBuilder *builder)
 {
 	int i_r;
 	i_r = start_polling();
-	i_r = start_screen_update();
+	gdk_threads_add_timeout((guint)1500,screen_update_cb,NULL);
 	return FALSE;
 }
 
+gboolean screen_update_cb(void * p_v)
+{
+	void * pp_v;
+	pp_v = screen_update_fn(p_v);
+	return TRUE;
+}
 
 void INThandler(int signum)
 {

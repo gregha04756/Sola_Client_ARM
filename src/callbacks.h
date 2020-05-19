@@ -44,6 +44,8 @@ extern int start_screen_update(void);
 extern gboolean window_is_showing(GtkBuilder *builder);
 extern void INThandler(int signum);
 extern void	on_toggle1_toggled(GtkToggleButton *b);
+extern void * screen_update_fn(void * parm);
+extern gboolean screen_update_cb(void * p_v);
 
 
 #endif /* CALLBACKS_H_ */
