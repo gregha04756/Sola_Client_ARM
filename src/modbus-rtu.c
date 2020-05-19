@@ -25,6 +25,7 @@
 #include <unistd.h>
 #endif
 #include <assert.h>
+#include <glib/gprintf.h>
 
 #include "modbus-private.h"
 

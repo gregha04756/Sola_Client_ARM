@@ -19,6 +19,7 @@
 #include <sys/types.h>
 #include <math.h>
 #include <ctype.h>
+#include <glib/gprintf.h>
 
 #include "modbus.h"
 #include "Reg_Groups.h"

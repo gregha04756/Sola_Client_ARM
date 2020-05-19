@@ -26,6 +26,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <time.h>
+#include <glib/gprintf.h>
 
 #include "config.h"
 

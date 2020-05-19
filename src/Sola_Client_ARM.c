@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <math.h>
 #include <ctype.h>
+#include <glib/gprintf.h>
 #include <assert.h>
 
 

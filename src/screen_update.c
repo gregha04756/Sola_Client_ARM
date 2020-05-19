@@ -19,6 +19,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <pthread.h>
+#include <glib/gprintf.h>
+
 #include "modbus.h"
 
 #include "Reg_Groups.h"

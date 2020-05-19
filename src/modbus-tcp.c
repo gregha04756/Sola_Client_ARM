@@ -25,6 +25,7 @@
 #endif
 #include <signal.h>
 #include <sys/types.h>
+#include <glib/gprintf.h>
 
 #if defined(_WIN32)
 # define OS_WIN32

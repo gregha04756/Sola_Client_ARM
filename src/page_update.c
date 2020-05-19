@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include <memory.h>
 #include <string.h>
+#include <glib/gprintf.h>
 #include <assert.h>
 
 
@@ -116,8 +117,8 @@ void page_update(SCREENPAGE_T * page)
 	enum SolaType thistype;
 	volatile int local_die = 0;
 	GtkWidget   *widget_target;
-	gchar wname[10] = {'\0'};
-	gchar wvalue[10] = {'\0'};
+	gchar wname[30] = {'\0'};
+	gchar wvalue[30] = {'\0'};
 	uint16_t ui_addr = 0x0006;
 
 #if defined(_DEBUG)
@@ -156,12 +157,12 @@ void page_update(SCREENPAGE_T * page)
 			temperature_units = (bool)Sola_Data[Temperature_units.us_RegAddr];
 			temperature_value = TempVal(temperature_units,ui16_value);
 #if defined (_DEBUG)
-			fprintf(stderr,"\n temperature_value = %f \n",temperature_value);
+			fprintf(stderr,"\n temperature_value = %-.2f \n",temperature_value);
 #endif
 			p_v = memset(wname,(int)0,sizeof(wname));
 			i_r = g_sprintf(wname,"txt%04X",ui16_reg_addr);
 			p_v = memset(wvalue,(int)0,sizeof(wvalue));
-			i_r = g_sprintf(wvalue,"%f",temperature_value);
+			i_r = g_sprintf(wvalue,"%-.2f",temperature_value);
 #if defined (_DEBUG)
 			fprintf(stderr,"\ni_x = %d  0x%04X  %d  %s  %s\n", i_x, ui16_reg_addr, ui16_value, wname, wvalue);
 #endif
