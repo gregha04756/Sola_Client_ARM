@@ -117,19 +117,17 @@ void page_update(SCREENPAGE_T * page)
 		case Temperature:
 			temperature_units = (bool)Sola_Data[Temperature_units.us_RegAddr];
 			temperature_value = TempVal(temperature_units,ui16_value);
+			p_v = memset(wname,(int)0,sizeof(wname));
 			i_r = g_sprintf(wname,"txt%04X",ui16_reg_addr);
-#if defined (_DEBUG)
-			i_r = (int)g_printf("\n%s\n",wname);
-#endif
 			p_v = memset(wvalue,(int)0,sizeof(wvalue));
 			i_r = (temperature_units == (bool)FAHRENHEITUNITS) ? \
 					g_sprintf(wvalue,"%-.2f",temperature_value) : \
 							g_sprintf(wvalue,"%-.2f",temperature_value);
-			widget_target = GTK_WIDGET(gtk_builder_get_object(builder, wname));
 #if defined (_DEBUG)
-			i_r = (int)g_printf("\n%s\n",wname);
+			fprintf(stderr,"\ni_x = %d  0x%04X  %s  %s\n",i_x,ui16_reg_addr,wname,wvalue);
 #endif
-			assert(NULL != widget_target);
+			widget_target = GTK_WIDGET(gtk_builder_get_object(builder, wname));
+			g_assert(NULL != widget_target);
 			if (NULL != widget_target)
 			{
 				gtk_label_set_text (GTK_LABEL(widget_target), (const gchar*)wvalue);

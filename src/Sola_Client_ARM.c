@@ -41,11 +41,6 @@ GtkWidget   *padlock_locked;
 GtkWidget   *padlock_unlocked;
 bool image_toggle = false;
 
-#if 0
-extern int start_polling(void);
-extern int start_screen_update(void);
-#endif
-
 
 GtkWidget	*window;
 GtkWidget	*fixed_01;
@@ -65,59 +60,6 @@ GtkBuilder	*builder;
 GtkWidget	*toggle1;
 GtkWidget	*lvl000B;
 
-#if 0
-gboolean window_is_showing(GtkBuilder *builder)
-{
-	int i_r;
-	i_r = start_polling();
-	i_r = start_screen_update();
-	return FALSE;
-}
-
-
-void INThandler(int signum)
-{
-    signal(signum, SIG_IGN);
-	fprintf(stderr, "Shutting down by signal\n");
-	pthread_mutex_lock(&poll_mutex);
-	die = 1;
-	pthread_mutex_unlock(&poll_mutex);
-}
-
-void	on_toggle1_toggled(GtkToggleButton *b)
-{
-	gboolean T = gtk_toggle_button_get_active(b);
-	assert(NULL != padlock_locked);
-	assert(NULL != padlock_unlocked);
-	if (T)
-	{
-		gtk_button_set_image(b,padlock_unlocked);
-	}
-	else
-	{
-		gtk_button_set_image(b,padlock_locked);
-	}
-}
-#if 0
-void	on_button2_clicked (GtkButton *b)
-{
-/*	old_image = gtk_button_get_image(b);
-	assert(NULL != old_image); */
-	assert(NULL != padlock_locked);
-	assert(NULL != padlock_unlocked);
-	if (image_toggle)
-	{
-		gtk_button_set_image(b,padlock_locked);
-	}
-	if (!image_toggle)
-	{
-		gtk_button_set_image(b,padlock_unlocked);
-	}
-	image_toggle = !image_toggle;
-}
-#endif
-#endif
-
 int main (int argc, char** argv)
 {
 	int i_r = 0;
@@ -133,6 +75,7 @@ int main (int argc, char** argv)
 	//---------------------------------------------------------------------
 
 	builder = gtk_builder_new_from_file ("./src/Sola_Client.glade");
+	assert(NULL != builder);
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "wnd_01"));
 
 	g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
