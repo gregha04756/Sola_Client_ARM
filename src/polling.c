@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <pthread.h>
+#include <glib/gprintf.h>
 
 #include "modbus.h"
 #include "Reg_Groups.h"
@@ -38,7 +39,7 @@ gint print_Sola_Data_registers(uint16_t *buf, uint16_t count)
 {
 	int i_x;
 	gint gi_r;
-	gi_r = g_printf("Sola_Data[%ld - %ld] ",(buf-(&Sola_Data[0])),buf+count-(&Sola_Data[0])-1);
+	gi_r = g_fprintf(stderr,"Sola_Data[%d - %d] ",(buf-(&Sola_Data[0])),buf+count-(&Sola_Data[0])-1);
 
 	for (i_x = 0;i_x < count && (&Sola_Data[0]+(2*Sola_Register_Count)>(buf+(2*i_x))); ++i_x)
 	{
@@ -256,7 +257,7 @@ void * poll_thread(void * parm)
 
 		while (ctx == NULL)
 		{
-			ctx = modbus_new_tcp(Local_Host_IP, MODBUS_TCP_DEFAULT_PORT);
+			ctx = modbus_new_rtu("/dev/ttyUSB0", 38400, 'N', 8, 1);
 			if (NULL == ctx)
 			{
 				i_r = fprintf(stderr, "Unable to allocate libmodbus context\n");
