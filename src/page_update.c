@@ -120,6 +120,7 @@ void page_update(SCREENPAGE_T * page)
 	gchar wname[30] = {'\0'};
 	gchar wvalue[30] = {'\0'};
 	uint16_t ui_addr = 0x0006;
+	double tx;
 
 #if defined(_DEBUG)
 	p_v = (void*) strncpy(
@@ -176,6 +177,10 @@ void page_update(SCREENPAGE_T * page)
 			widget_target = GTK_WIDGET(gtk_builder_get_object(builder, wname));
 			if (NULL != widget_target)
 			{
+#if defined(_DEBUG)
+				tx  = gtk_level_bar_get_max_value  (GTK_LEVEL_BAR(widget_target));
+				i_r = g_printf("\nLevel bar %s max value %f\n",wname,tx);
+#endif
 				gtk_level_bar_set_value  (GTK_LEVEL_BAR(widget_target), (gdouble)temperature_value);
 			}
 			break;
